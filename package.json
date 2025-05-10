@@ -1,0 +1,20 @@
+{
+  "name": "objectutils",
+  "version": "1.0.0",
+  "description": "A utility library for advanced object manipulation in TypeScript, providing methods for property management and transformation.",
+  "main": "babel.config.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.23.5",
+    "@babel/preset-env": "^7.23.5",
+    "@babel/preset-typescript": "^7.23.3",
+    "@types/jest": "^29.5.11",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0"
+  }
+}
