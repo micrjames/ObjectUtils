@@ -43,9 +43,32 @@ describe("Object Manipulation Tests", () => {
     });
 
     describe('Object Merging', () => {
-        test.todo('merge should merge two objects');
-        test.todo('mergeDeep should deeply merge two objects');
-        test.todo('mergeWith should merge two objects with a custom merge function');
+		let result: GenericObject<number>;
+		let target: GenericObject<number>;
+		let source: GenericObject<number>;
+		let mergedObj: GenericObject<number>;
+        test("'merge' should merge two objects.", () => {
+			target = { a: 1 };
+			source = { b: 2 };
+			mergedObj = { a: 1, b: 2 };
+			console.log(mergedObj);
+			result = ObjectUtils.merge(target, source);
+			expect(result).toEqual(mergedObj);
+		});
+        test("'mergeDeep' should deeply merge two objects.", () => {
+			target = { a: { b: 1 } };
+			source = { a: { c: 2 }, d: 3 };
+			mergedObj = { a: { b: 1, c: 2 }, d: 3 };
+			result = ObjectUtils.mergeDeep(target, source);
+			expect(result).toEqual(mergedObj);
+		});
+        test("'mergeWith' should merge two objects with a custom merge function.", () => {
+			target = { a: 1, b: 2 };
+			source = { b: 3, c: 4 };
+			mergedObj = { a: 1, b: 5, c: 4 };
+			result = ObjectUtils.mergeWith(target, source, (targetValue, sourceValue) => targetValue + sourceValue);
+			expect(result).toEqual(mergedObj);
+		});
     });
 
     describe('Object Cloning', () => {
