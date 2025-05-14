@@ -80,4 +80,59 @@ export class ObjectUtils {
         }
 		return output;
 	}
+
+	// Object Cloning
+	static deepClone<T>(obj: T, hash = new WeakMap()): T {
+		// Check for null or undefined
+		if (obj === null || obj === undefined) {
+			return obj;
+		}
+		// Handle primitive types (string, number, boolean, etc.)
+		if (typeof obj !== 'object') {
+			return obj;
+		}
+
+		// Handle circular references
+		if (hash.has(obj as unknown as object)) {
+			return hash.get(obj as unknown as object);
+		}
+
+		// Handle Date objects
+		if (obj instanceof Date) {
+			return new Date(obj.getTime()) as unknown as T;
+		}
+
+		// Handle Array
+		if (Array.isArray(obj)) {
+			const clone: any[] = [];
+			hash.set(obj, clone);
+			for (let item of obj) {
+				clone.push(this.deepClone(item, hash));
+			}
+			return clone as unknown as T;
+		}
+
+		// Handle functions
+		if (typeof obj === 'function') {
+			const clonedFunction = function (...args: any[]) {
+				return obj.apply(this, args);
+			};
+			// Copy properties from the original function to the cloned function
+			Object.setPrototypeOf(clonedFunction, Object.getPrototypeOf(obj));
+			Object.assign(clonedFunction, obj); // Copy properties of the original function
+			return clonedFunction as unknown as T;
+		}
+		
+		const clone = Object.create(Object.getPrototypeOf(obj));
+		hash.set(obj as unknown as object, clone);
+
+		// Recursively clone properties
+		for (const key in obj) {
+			if (obj.hasOwnProperty(key)) {
+				clone[key] = this.deepClone(obj[key], hash);
+			}
+		}
+
+		return clone;
+	}
 }
