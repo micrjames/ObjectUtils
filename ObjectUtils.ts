@@ -135,4 +135,61 @@ export class ObjectUtils {
 
 		return clone;
 	}
+	// Method to check if an object is empty
+    static isEmpty<T extends object>(obj: T): boolean {
+        return Object.keys(obj).length === 0;
+    }
+	// Method to get the keys of an object
+    static keys<T extends object>(obj: T): (keyof T)[] {
+        return Object.keys(obj) as (keyof T)[];
+    }
+
+    // Method to get the values of an object
+    static values<T extends object>(obj: T): T[keyof T][] {
+        return Object.values(obj);
+    }
+	// Method to get the entries of an object
+    static entries<T extends object>(obj: T): [keyof T, T[keyof T]][] {
+        return Object.entries(obj) as [keyof T, T[keyof T]][];
+    }
+	// Method to check deep equality of two objects
+    static deepEqual<T>(obj1: T, obj2: T): boolean {
+        return false;
+    }
+    // Method to check deep equality of two objects
+    static isEqual<T>(obj1: T, obj2: T): boolean {
+		return false;
+    }
+    // Method to map over an object's properties
+    static mapProperties<T extends object, U>(obj: T, callback: (value: T[keyof T], key: keyof T) => U): { [K in keyof T]: U } {
+        const result: Partial<{ [K in keyof T]: U }> = {};
+        return result as { [K in keyof T]: U };
+    }
+    // Method to filter properties of an object based on a predicate
+    static filterProperties<T extends object>(obj: T, predicate: (value: T[keyof T], key: keyof T) => boolean): Partial<T> {
+        const result: Partial<T> = {};
+        return result;
+    }
+    // Method to transform an object based on a callback function
+    static transform<T extends object, U>(obj: T, callback: (value: T[keyof T], key: keyof T) => U): { [K in keyof T]: U } {
+        const result: Partial<{ [K in keyof T]: U }> = {};
+        return result as { [K in keyof T]: U };
+    }
+    // Method to flatten a nested object into a single-level object with dot-separated keys
+    static flatten<T extends object>(obj: T, prefix = '', result: Partial<Record<string, any>> = {}): Record<string, any> {
+        return result;
+    }
+    // Method to convert a flattened object back into a nested object
+    static unflatten<T extends object>(obj: Record<string, any>): T {
+        const result: any = {};
+        return result;
+    }
+    // Method to map the keys of an object to new keys based on a callback function
+    static mapKeys<T extends object, K extends string>(
+        obj: T,
+        callback: (key: keyof T) => K
+    ): { [key in K]: T[keyof T] } {
+        const result: Partial<{ [key in K]: T[keyof T] }> = {};
+        return result as { [key in K]: T[keyof T] };
+    }
 }

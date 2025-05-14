@@ -16,14 +16,23 @@ describe("Object Manipulation Tests", () => {
 				result = ObjectUtils.removeProperty(testObject, 'b');
 				expect(result).toEqual(expectedObj);
 			});
+			test.todo("Should remove a property from an object.");
+			test.todo("Should return the original object when the property does not exist.");
+			test.todo("Should not affect nested properties when removing a top-level property.");
+			test.todo("Should return an empty object when called on an empty object.");
+			test.todo("Should enforce type safety and not allow removal of non-existent properties.");
+			test.todo("Should only remove the specified property and leave others intact.");
+			test.todo("Should perform efficiently with large objects.");
+			test.todo("Should not mutate the original object.");
 		});
-		describe("hasPropery", () => {
+		describe("hasProperty", () => {
 			test("Should check if an object has a specific property.", () => {
 				result = ObjectUtils.hasProperty(testObject, 'a');
 				expect(result).toBe(true);
 				result = ObjectUtils.hasProperty(testObject, 'z');
 				expect(result).toBe(false);
 			});
+			test.todo("Should return false for an empty object.");
 		});
         describe("getProperty", () => {
 			test("Should return a property value with a default fallback.", () => {
@@ -35,6 +44,8 @@ describe("Object Manipulation Tests", () => {
 				expectedValue = testObject['z'];
 				expect(result).toBe(expectedValue ?? defaultValue);
 			});
+			test.todo("Should return the default value when the property is undefined.");
+            test.todo("Should return the correct value for nested properties.");
 		});
 		describe("pick", () => {
 			test("Should pick specific properties from an object.", () => {
@@ -42,6 +53,9 @@ describe("Object Manipulation Tests", () => {
 				expectedObj = { a: 1, c: { d: 3 } };
 				expect(result).toEqual(expectedObj);
 			});
+			test("Should return an empty object when no properties are picked.");
+            test.todo("Should ignore non-existent properties when picking.");
+            test.todo("Should return only the properties that exist in the object.");
 		});
 		describe("omit", () => {
 			test("Should omit specific properties from an object.", () => {
@@ -49,6 +63,10 @@ describe("Object Manipulation Tests", () => {
 				expectedObj = { b: 2 };
 				expect(result).toEqual(expectedObj);
 			});
+			test.todo("Should return the original object when no properties are omitted.");
+            test.todo("Should ignore non-existent properties when omitting.");
+            test.todo("Should omit multiple properties correctly.");
+            test.todo("Should return an empty object when all properties are omitted.");
 		});
     });
 
@@ -66,6 +84,9 @@ describe("Object Manipulation Tests", () => {
 				result = ObjectUtils.merge(target, source);
 				expect(result).toEqual(mergedObj);
 			});
+				test.todo("Should overwrite properties in the target object with properties from the source object.");
+				test.todo("Should handle merging with empty objects.");
+				test.todo("Should return a new object without mutating the original objects.");
 		});
 		describe("mergeDeep", () => {
 			test("Should deeply merge two objects.", () => {
@@ -75,6 +96,9 @@ describe("Object Manipulation Tests", () => {
 				result = ObjectUtils.mergeDeep(target, source);
 				expect(result).toEqual(mergedObj);
 			});
+			test.todo("Should handle merging with nested objects and arrays.");
+			test.todo("Should not mutate the original objects during deep merge.");
+			test.todo("Should handle merging with empty objects.");
 		});
 		describe("mergeWith", () => {
 			test("Should merge two objects with a custom merge function.", () => {
@@ -84,6 +108,12 @@ describe("Object Manipulation Tests", () => {
 				result = ObjectUtils.mergeWith(target, source, (targetValue, sourceValue) => targetValue + sourceValue);
 				expect(result).toEqual(mergedObj);
 			});
+			test.todo("Should apply custom merge function only to existing properties in the target.");
+			test.todo("Should handle merging with a custom function that returns a different type.");
+			test.todo("Should return a new object without mutating the original objects.");
+			test.todo("Should handle merging with empty objects.");
+			test.todo("Should handle merging when the target has properties not in the source.");
+			test.todo("Should handle merging when the source has properties not in the target.");
 		});
     });
 
@@ -150,24 +180,82 @@ describe("Object Manipulation Tests", () => {
 		});
 		describe("deepFreeze", () => {
 			test.todo("Should deeply freeze an object to prevent modifications.");
+			test.todo("Should not throw when accessing properties of a frozen object.");
+			test.todo("Should freeze an object with nested arrays.");
+			test.todo("Should freeze an object with nested objects and arrays.");
+			test.todo("Should return the same object reference after freezing.");
+			test.todo("Should handle freezing an empty object.");
+			test.todo("Should handle freezing an object with non-enumerable properties.");
 		});
     });
-
-    describe('Object Inspection', () => {
-        test.todo('isEmpty should check if an object is empty');
-        test.todo('keys should return the keys of an object');
-        test.todo('values should return the values of an object');
-        test.todo('entries should return the entries of an object');
-        test.todo('deepEqual should check deep equality of two objects');
-        test.todo('isEqual should check deep equality of two objects');
-    });
-
-    describe('Object Transformation', () => {
-        test.todo('mapProperties should map over an object\'s properties');
-        test.todo('filterProperties should filter properties of an object based on a predicate');
-        test.todo('transform should transform an object based on a callback function');
-        test.todo('flatten should flatten a nested object into a single-level object');
-        test.todo('unflatten should convert a flattened object back into a nested object');
-        test.todo('mapKeys should map the keys of an object to new keys based on a callback function');
-    });
+	describe("Object Inspection", () => {
+		describe("isEmpty", () => {
+			test.todo("Should return true for an empty object.");
+			test.todo("Should return false for a non-empty object.");
+			test.todo("Should return false for an object with nested empty objects.");
+			test.todo("Should return true for an object with only empty arrays.");
+		});
+		describe("keys", () => {
+			test.todo("Should return the keys of an object.");
+			test.todo("Should return an empty array for an empty object.");
+			test.todo("Should return keys of an object with nested properties.");
+		});
+		describe("values", () => {
+			test.todo("Should return the values of an object.");
+			test.todo("Should return an empty array for an empty object.");
+			test.todo("Should return values of an object with nested properties.");
+		});
+		describe("entries", () => {
+			test.todo("Should return the entries of an object.");
+			test.todo("Should return an empty array for an empty object.");
+			test.todo("Should return entries of an object with nested properties.");
+		});
+		describe("deepEqual", () => {
+			test.todo("Should check deep equality of two objects.");
+			test.todo("Should return false for objects that are not deeply equal.");
+			test.todo("Should return true for deeply equal nested objects.");
+			test.todo("Should return false for objects with different structures.");
+		});
+		describe("isEqual", () => {
+			test.todo("Should check deep equality of two objects.");
+			test.todo("Should return false for objects that are not deeply equal.");
+			test.todo("Should return true for deeply equal nested objects.");
+			test.todo("Should return false for objects with different structures.");
+		});
+	});
+	describe("Object Transformation", () => {
+		describe("mapProperties", () => {
+			test.todo("Should map over an object's properties.");
+			test.todo("Should handle an empty object.");
+			test.todo("Should map properties of an object with nested properties.");
+		});
+		describe("filterProperties", () => {
+			test.todo("Should filter properties of an object based on a predicate.");
+			test.todo("Should return an empty object if no properties match the predicate.");
+			test.todo("Should handle an empty object.");
+		});
+		describe("transform", () => {
+			test.todo("Should transform an object based on a callback function.");
+			test.todo("Should handle an empty object.");
+			test.todo("Should transform properties of an object with nested properties.");
+		});
+		describe("flatten", () => {
+			test.todo("Should flatten a nested object into a single-level object.");
+			test.todo("Should handle an empty object.");
+			test.todo("Should flatten an object with multiple nested levels.");
+			test.todo("Should flatten an object with arrays.");
+		});
+		describe("unflatten", () => {
+			test.todo("Should convert a flattened object back into a nested object.");
+			test.todo("Should handle an empty object.");
+			test.todo("Should convert a flattened object with multiple levels back to nested structure.");
+			test.todo("Should handle flattened objects with arrays.");
+		});
+		describe("mapKeys", () => {
+			test.todo("Should map the keys of an object to new keys based on a callback function.");
+			test.todo("Should handle an empty object.");
+			test.todo("Should map keys of an object with nested properties.");
+			test.todo("Should handle keys that are not strings.");
+		});
+	});
 });
