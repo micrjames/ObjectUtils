@@ -65,21 +65,21 @@ describe("Object Manipulation Tests", () => {
         describe("getProperty", () => {
 			test("Should return a property value with a default fallback.", () => {
 				const defaultValue = 0;
-				result = ObjectUtils.getProperty(testObject, 'a', defaultValue);
-				expectedValue = testObject['a'];
+				result = ObjectUtils.getProperty(testObject, 'a', defaultValue) as number | boolean | GenericObject<number>;
+				expectedValue = testObject['a'] as number | GenericObject<number>;
 				expect(result).toBe(expectedValue);
-				result = ObjectUtils.getProperty(testObject, 'z', defaultValue);
-				expectedValue = testObject['z'];
+				result = ObjectUtils.getProperty(testObject, 'z', defaultValue) as number | boolean | GenericObject<number>;
+				expectedValue = testObject['z'] as number | GenericObject<number>;
 				expect(result).toBe(expectedValue ?? defaultValue);
 			});
 			test("Should return the default value when the property is undefined.", () => {
 			    const defaultValue = 10;
-                result = ObjectUtils.getProperty(testObject, 'z', defaultValue);
+                result = ObjectUtils.getProperty(testObject, 'z', defaultValue) as number | boolean | GenericObject<number>;
                 expect(result).toBe(defaultValue);
 			});
             test("Should return the correct value for nested properties.", () => {
 				const defaultValue = { d: 0 };
-                result = ObjectUtils.getProperty(testObject, 'c', defaultValue);
+                result = ObjectUtils.getProperty(testObject, 'c', defaultValue) as number | boolean | GenericObject<number>;
                 expect(result).toEqual(testObject.c);
 			});
 		});
