@@ -135,6 +135,20 @@ export class ObjectUtils {
 
 		return clone;
 	}
+
+    // Object Freezing
+    // Method to deeply freeze an object to prevent modifications
+    static deepFreeze<T>(obj: T): T {
+		Object.freeze(obj);
+        for (const key in obj) {
+            if (obj[key] && typeof obj[key] === 'object') {
+                this.deepFreeze(obj[key]);
+            }
+        }
+		return obj;
+	}
+
+	// Object Inspection
 	// Method to check if an object is empty
     static isEmpty<T extends object>(obj: T): boolean {
         return Object.keys(obj).length === 0;
@@ -160,6 +174,8 @@ export class ObjectUtils {
     static isEqual<T>(obj1: T, obj2: T): boolean {
 		return false;
     }
+
+	// Object Transformation
     // Method to map over an object's properties
     static mapProperties<T extends object, U>(obj: T, callback: (value: T[keyof T], key: keyof T) => U): { [K in keyof T]: U } {
         const result: Partial<{ [K in keyof T]: U }> = {};

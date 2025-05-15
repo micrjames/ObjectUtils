@@ -140,7 +140,6 @@ describe("Object Manipulation Tests", () => {
 				target = { a: 1 };
 				source = { b: 2 };
 				mergedObj = { a: 1, b: 2 };
-				console.log(mergedObj);
 				result = ObjectUtils.merge(target, source);
 				expect(result).toEqual(mergedObj);
 			});
@@ -249,7 +248,7 @@ describe("Object Manipulation Tests", () => {
 		});
     });
 
-    describe('Object Cloning', () => {
+    describe('Object Cloning and Freezing', () => {
 		describe("deepClone", () => {
 			type ValueType = string | number | Date | (() => string) | string[] | GenericObject<any>;
 			let testObject: GenericObject<ValueType>;
@@ -271,7 +270,6 @@ describe("Object Manipulation Tests", () => {
 			});
 			test("Should create a deep clone of an object.", () => {
 				clone = ObjectUtils.deepClone(testObject);
-				console.log(clone);
 				expect(clone).toEqual(testObject);
 				expect(clone).not.toBe(testObject); // Ensure it's a different reference
 			});
@@ -311,13 +309,64 @@ describe("Object Manipulation Tests", () => {
 			});
 		});
 		describe("deepFreeze", () => {
-			test.todo("Should deeply freeze an object to prevent modifications.");
-			test.todo("Should not throw when accessing properties of a frozen object.");
-			test.todo("Should freeze an object with nested arrays.");
-			test.todo("Should freeze an object with nested objects and arrays.");
-			test.todo("Should return the same object reference after freezing.");
-			test.todo("Should handle freezing an empty object.");
-			test.todo("Should handle freezing an object with non-enumerable properties.");
+			test("Should deeply freeze an object to prevent modifications.", () => {
+				const obj = { a: 1, b: { c: 2 } };
+				const frozenObj = ObjectUtils.deepFreeze(obj);
+				expect(() => {
+					frozenObj.a = 2; // Attempt to modify
+				}).toThrow();
+				expect(() => {
+					frozenObj.b.c = 3; // Use type assertion to access 'c'
+				}).toThrow();
+			});
+			test("Should not throw when accessing properties of a frozen object.", () => {
+				const obj = { a: 1, b: { c: 2 } };
+				const frozenObj = ObjectUtils.deepFreeze(obj);
+				expect(frozenObj.a).toBe(1);
+				expect(frozenObj.b.c).toBe(2);
+			});
+			test("Should freeze an object with nested arrays.", () => {
+				const obj = { a: 1, b: { c: [1, 2, 3] } };
+				const frozenObj = ObjectUtils.deepFreeze(obj);
+				expect(() => {
+					frozenObj.b.c[0] = 4; // Attempt to modify array element
+				}).toThrow();
+			});
+			test("Should freeze an object with nested objects and arrays.", () => {
+				const obj = { a: 1, b: { c: { d: 2 }, e: [1, 2] } };
+				const frozenObj = ObjectUtils.deepFreeze(obj);
+				expect(() => {
+					frozenObj.b.c.d = 3; // Attempt to modify nested object property
+				}).toThrow();
+				expect(() => {
+					frozenObj.b.e[1] = 3; // Attempt to modify array element
+				}).toThrow();
+			});
+			test("Should return the same object reference after freezing.", () => {
+				const obj = { a: 1 };
+				const frozenObj = ObjectUtils.deepFreeze(obj);
+				expect(frozenObj).toBe(obj); // Ensure the reference is the same
+			});
+			test("Should handle freezing an empty object.", () => {
+				const obj = {};
+				const frozenObj = ObjectUtils.deepFreeze(obj);
+				expect(() => {
+					(frozenObj as { newProp?: number }).newProp = 1; // Attempt to modify
+				}).toThrow();
+			});
+			test("Should handle freezing an object with non-enumerable properties.", () => {
+				const obj = Object.create({}, {
+					a: { value: 1, enumerable: true },
+					b: { value: 2, enumerable: false }
+				});
+				const frozenObj = ObjectUtils.deepFreeze(obj);
+				expect(() => {
+					frozenObj.a = 3; // Attempt to modify enumerable property
+				}).toThrow();
+				expect(() => {
+					frozenObj.b = 4; // Attempt to modify non-enumerable property
+				}).toThrow();
+			});
 		});
     });
 	describe("Object Inspection", () => {
