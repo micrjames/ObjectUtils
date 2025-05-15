@@ -16,14 +16,38 @@ describe("Object Manipulation Tests", () => {
 				result = ObjectUtils.removeProperty(testObject, 'b');
 				expect(result).toEqual(expectedObj);
 			});
-			test.todo("Should remove a property from an object.");
-			test.todo("Should return the original object when the property does not exist.");
-			test.todo("Should not affect nested properties when removing a top-level property.");
-			test.todo("Should return an empty object when called on an empty object.");
-			test.todo("Should enforce type safety and not allow removal of non-existent properties.");
-			test.todo("Should only remove the specified property and leave others intact.");
-			test.todo("Should perform efficiently with large objects.");
-			test.todo("Should not mutate the original object.");
+			test("Should return the original object when the property does not exist.", () => {
+			    expectedObj = { a: 1, b: 2, c: { d: 3 } };
+                result = ObjectUtils.removeProperty(testObject, 'nonExistentProperty' as keyof typeof testObject);
+                expect(result).toEqual(expectedObj);
+			});
+			test("Should not affect nested properties when removing a top-level property.", () => {
+			    expectedObj = { a: 1, c: { d: 3 } };
+                result = ObjectUtils.removeProperty(testObject, 'b');
+                expect(result).toEqual(expectedObj);
+			});
+			test("Should return an empty object when called on an empty object.", () => {
+			    const emptyObject = {};
+                const result = ObjectUtils.removeProperty(emptyObject, 'anyProperty' as keyof typeof emptyObject);
+                expect(result).toEqual({});
+			});
+			test("Should only remove the specified property and leave others intact.", () => {
+				expectedObj = { a: 1, c: { d: 3 } };
+                result = ObjectUtils.removeProperty(testObject, 'b');
+                expect(result).toEqual(expectedObj);
+                expect(result).not.toHaveProperty('b');
+			});
+			test("Should perform efficiently with large objects.", () => {
+			    const largeObject = { a: 1, b: 2, ...Array.from({ length: 1000 }, (_, i) => ({ [`key${i}`]: i })) };
+                const result = ObjectUtils.removeProperty(largeObject, 'b');
+                expect(result).toHaveProperty('a');
+                expect(result).not.toHaveProperty('b');
+			});
+			test("Should not mutate the original object.", () => {
+				const originalObject = { ...testObject };
+                ObjectUtils.removeProperty(testObject, 'b');
+                expect(testObject).toEqual(originalObject);
+			});
 		});
 		describe("hasProperty", () => {
 			test("Should check if an object has a specific property.", () => {
@@ -32,7 +56,11 @@ describe("Object Manipulation Tests", () => {
 				result = ObjectUtils.hasProperty(testObject, 'z');
 				expect(result).toBe(false);
 			});
-			test.todo("Should return false for an empty object.");
+			test("Should return false for an empty object.", () => {
+				const emptyObject: Record<string, unknown> = {};
+				result = ObjectUtils.hasProperty(emptyObject, 'a');
+                expect(result).toBe(false);
+			});
 		});
         describe("getProperty", () => {
 			test("Should return a property value with a default fallback.", () => {
@@ -44,8 +72,16 @@ describe("Object Manipulation Tests", () => {
 				expectedValue = testObject['z'];
 				expect(result).toBe(expectedValue ?? defaultValue);
 			});
-			test.todo("Should return the default value when the property is undefined.");
-            test.todo("Should return the correct value for nested properties.");
+			test("Should return the default value when the property is undefined.", () => {
+			    const defaultValue = 10;
+                result = ObjectUtils.getProperty(testObject, 'z', defaultValue);
+                expect(result).toBe(defaultValue);
+			});
+            test("Should return the correct value for nested properties.", () => {
+				const defaultValue = { d: 0 };
+                result = ObjectUtils.getProperty(testObject, 'c', defaultValue);
+                expect(result).toEqual(testObject.c);
+			});
 		});
 		describe("pick", () => {
 			test("Should pick specific properties from an object.", () => {
@@ -53,9 +89,20 @@ describe("Object Manipulation Tests", () => {
 				expectedObj = { a: 1, c: { d: 3 } };
 				expect(result).toEqual(expectedObj);
 			});
-			test("Should return an empty object when no properties are picked.");
-            test.todo("Should ignore non-existent properties when picking.");
-            test.todo("Should return only the properties that exist in the object.");
+			test("Should return an empty object when no properties are picked.", () => {
+				result = ObjectUtils.pick(testObject, []);
+                expect(result).toEqual({});
+			});
+            test("Should ignore non-existent properties when picking.", () => {
+				result = ObjectUtils.pick(testObject, ['a', 'nonExistentProperty']);
+                expectedObj = { a: 1 };
+                expect(result).toEqual(expectedObj);
+			});
+            test("Should return only the properties that exist in the object.", () => {
+				result = ObjectUtils.pick(testObject, ['b', 'c']);
+                expectedObj = { b: 2, c: { d: 3 } };
+                expect(result).toEqual(expectedObj);
+			});
 		});
 		describe("omit", () => {
 			test("Should omit specific properties from an object.", () => {
@@ -63,10 +110,23 @@ describe("Object Manipulation Tests", () => {
 				expectedObj = { b: 2 };
 				expect(result).toEqual(expectedObj);
 			});
-			test.todo("Should return the original object when no properties are omitted.");
-            test.todo("Should ignore non-existent properties when omitting.");
-            test.todo("Should omit multiple properties correctly.");
-            test.todo("Should return an empty object when all properties are omitted.");
+			test("Should return the original object when no properties are omitted.", () => {
+				result = ObjectUtils.omit(testObject, []);
+                expect(result).toEqual(testObject);
+			});
+            test("Should ignore non-existent properties when omitting.", () => {
+			    result = ObjectUtils.omit(testObject, ['nonExistentProperty']);
+                expect(result).toEqual(testObject);
+			});
+            test("Should omit multiple properties correctly.", () => {
+			    result = ObjectUtils.omit(testObject, ['a', 'b']);
+                expectedObj = { c: { d: 3 } };
+                expect(result).toEqual(expectedObj);
+			});
+            test("Should return an empty object when all properties are omitted.", () => {
+				result = ObjectUtils.omit(testObject, ['a', 'b', 'c']);
+                expect(result).toEqual({});
+			});
 		});
     });
 
