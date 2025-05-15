@@ -1,5 +1,5 @@
 type GenericObject<T> = {
-    [key: string]: T | GenericObject<T>;
+    [key: string]: GenericObject<T> | T | T[] | string;
 };
 
 export { GenericObject };

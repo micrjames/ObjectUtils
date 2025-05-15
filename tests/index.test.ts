@@ -144,9 +144,27 @@ describe("Object Manipulation Tests", () => {
 				result = ObjectUtils.merge(target, source);
 				expect(result).toEqual(mergedObj);
 			});
-				test.todo("Should overwrite properties in the target object with properties from the source object.");
-				test.todo("Should handle merging with empty objects.");
-				test.todo("Should return a new object without mutating the original objects.");
+			test("Should overwrite properties in the target object with properties from the source object.", () => {
+				target = { a: 1, b: 2 };
+				source = { b: 3, c: 4 };
+				mergedObj = { a: 1, b: 3, c: 4 };
+				result = ObjectUtils.merge(target, source);
+				expect(result).toEqual(mergedObj);
+			});
+			test("Should handle merging with empty objects.", () => {
+				target = {};
+				source = { a: 1 };
+				mergedObj = { a: 1 };
+				result = ObjectUtils.merge(target, source);
+				expect(result).toEqual(mergedObj);
+			});
+			test("Should return a new object without mutating the original objects.", () => {
+				target = { a: 1 };
+				source = { b: 2 };
+				result = ObjectUtils.merge(target, source);
+				expect(target).toEqual({ a: 1 });
+				expect(source).toEqual({ b: 2 });
+			});
 		});
 		describe("mergeDeep", () => {
 			test("Should deeply merge two objects.", () => {
@@ -156,9 +174,27 @@ describe("Object Manipulation Tests", () => {
 				result = ObjectUtils.mergeDeep(target, source);
 				expect(result).toEqual(mergedObj);
 			});
-			test.todo("Should handle merging with nested objects and arrays.");
-			test.todo("Should not mutate the original objects during deep merge.");
-			test.todo("Should handle merging with empty objects.");
+			test("Should handle merging with nested objects and arrays.", () => {
+				target = { a: { b: 1, c: [1, 2] } };
+				source = { a: { c: [3, 4], d: 5 }, e: 6 };
+				mergedObj = { a: { b: 1, c: [3, 4], d: 5 }, e: 6 };
+				result = ObjectUtils.mergeDeep(target, source);
+				expect(result).toEqual(mergedObj);
+			});
+			test("Should not mutate the original objects during deep merge.", () => {
+				target = { a: { b: 1 } };
+				source = { a: { c: 2 }, d: 3 };
+				result = ObjectUtils.mergeDeep(target, source);
+				expect(target).toEqual({ a: { b: 1 } });
+				expect(source).toEqual({ a: { c: 2 }, d: 3 });
+			});
+			test("Should handle merging with empty objects.", () => {
+				target = { a: { b: 1 } };
+				source = {};
+				mergedObj = { a: { b: 1 } };
+				result = ObjectUtils.mergeDeep(target, source);
+				expect(result).toEqual(mergedObj);
+			});
 		});
 		describe("mergeWith", () => {
 			test("Should merge two objects with a custom merge function.", () => {
@@ -168,12 +204,48 @@ describe("Object Manipulation Tests", () => {
 				result = ObjectUtils.mergeWith(target, source, (targetValue, sourceValue) => targetValue + sourceValue);
 				expect(result).toEqual(mergedObj);
 			});
-			test.todo("Should apply custom merge function only to existing properties in the target.");
-			test.todo("Should handle merging with a custom function that returns a different type.");
-			test.todo("Should return a new object without mutating the original objects.");
-			test.todo("Should handle merging with empty objects.");
-			test.todo("Should handle merging when the target has properties not in the source.");
-			test.todo("Should handle merging when the source has properties not in the target.");
+			test("Should apply custom merge function only to existing properties in the target.", () => {
+				target = { a: 1, b: 2 };
+				source = { b: 3, c: 4 };
+				mergedObj = { a: 1, b: 5, c: 4 };
+				result = ObjectUtils.mergeWith(target, source, (targetValue, sourceValue) => targetValue + sourceValue);
+				expect(result).toEqual(mergedObj);
+			});
+			test("Should handle merging with a custom function that returns a different type.", () => {
+				target = { a: 1, b: 2 };
+				source = { b: 3, c: 4 };
+				mergedObj = { a: 1, b: "2-3", c: 4 }; // Custom merge function concatenates numbers as strings
+				result = ObjectUtils.mergeWith(target, source, (targetValue, sourceValue) => `${targetValue}-${sourceValue}`);
+				expect(result).toEqual(mergedObj);
+			});
+			test("Should return a new object without mutating the original objects.", () => {
+				target = { a: 1, b: 2 };
+				source = { b: 3, c: 4 };
+				result = ObjectUtils.mergeWith(target, source, (targetValue, sourceValue) => targetValue + sourceValue);
+				expect(target).toEqual({ a: 1, b: 2 });
+				expect(source).toEqual({ b: 3, c: 4 });
+			});
+			test("Should handle merging with empty objects.", () => {
+				target = { a: 1 };
+				source = {};
+				mergedObj = { a: 1 };
+				result = ObjectUtils.mergeWith(target, source, (targetValue, sourceValue) => targetValue + sourceValue);
+				expect(result).toEqual(mergedObj);
+			});
+			test("Should handle merging when the target has properties not in the source.", () => {
+				target = { a: 1, b: 2 };
+				source = { b: 3 };
+				mergedObj = { a: 1, b: 5 }; // Custom merge function adds values
+				result = ObjectUtils.mergeWith(target, source, (targetValue, sourceValue) => targetValue + sourceValue);
+				expect(result).toEqual(mergedObj);
+			});
+			test("Should handle merging when the source has properties not in the target.", () => {
+				target = { a: 1 };
+				source = { b: 2, c: 3 };
+				mergedObj = { a: 1, b: 2, c: 3 }; // Direct assignment for new properties
+				result = ObjectUtils.mergeWith(target, source, (targetValue, sourceValue) => targetValue + sourceValue);
+				expect(result).toEqual(mergedObj);
+			});
 		});
     });
 
