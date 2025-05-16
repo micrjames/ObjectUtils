@@ -371,10 +371,27 @@ describe("Object Manipulation Tests", () => {
     });
 	describe("Object Inspection", () => {
 		describe("isEmpty", () => {
-			test.todo("Should return true for an empty object.");
-			test.todo("Should return false for a non-empty object.");
-			test.todo("Should return false for an object with nested empty objects.");
-			test.todo("Should return true for an object with only empty arrays.");
+			let isObjEmpty: boolean;
+			test("Should return true for an empty object.", () => {
+				const obj = {};
+				isObjEmpty = ObjectUtils.isEmpty(obj);
+				expect(isObjEmpty).toBeTruthy();
+			});
+			test("Should return false for a non-empty object.", () => {
+				const obj = { a: 1 };
+				isObjEmpty = ObjectUtils.isEmpty(obj);
+				expect(isObjEmpty).toBeFalsy();
+			});
+			test("Should return false for an object with nested empty objects.", () => {
+				const obj = { a: {}, b: 2 };
+				isObjEmpty = ObjectUtils.isEmpty(obj);
+				expect(isObjEmpty).toBeFalsy();
+			});
+			test("Should return true for an object with only empty arrays.", () => {
+				const obj = { a: [],  b: [] };
+				isObjEmpty = ObjectUtils.isEmpty(obj);
+				expect(isObjEmpty).toBeFalsy();
+			});
 		});
 		describe("keys", () => {
 			test.todo("Should return the keys of an object.");
