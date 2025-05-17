@@ -1,4 +1,5 @@
 import { ObjectUtils } from '../ObjectUtils';
+import { Entry } from "../defns";
 import { GenericObject } from './test.defns';
 
 describe("Object Manipulation Tests", () => {
@@ -384,31 +385,131 @@ describe("Object Manipulation Tests", () => {
 			});
 		});
 		describe("keys", () => {
-			test.todo("Should return the keys of an object.");
-			test.todo("Should return an empty array for an empty object.");
-			test.todo("Should return keys of an object with nested properties.");
+			let testObject: GenericObject<number>;
+			let keys: string[];
+			let result: (number | string)[];
+			test("Should return the keys of an object.", () => {
+				testObject = { a: 1, b: 2, c: { d: 3 } };
+				keys = ['a', 'b', 'c'];
+				result = ObjectUtils.keys(testObject);
+				expect(result).toEqual(keys);
+			});
+			test("Should return an empty array for an empty object.", () => {
+				testObject = {};
+				keys = [];
+				result = ObjectUtils.keys(testObject);
+				expect(result).toEqual(keys);
+			});
+			test("Should return keys of an object with nested properties.", () => {
+				testObject = { a: 1, b: { c: 2 } };
+				keys = ['a', 'b'];
+				result = ObjectUtils.keys(testObject);
+				expect(result).toEqual(keys);
+			});
 		});
 		describe("values", () => {
-			test.todo("Should return the values of an object.");
-			test.todo("Should return an empty array for an empty object.");
-			test.todo("Should return values of an object with nested properties.");
+			let testObject: GenericObject<number>;
+			let values: (number | GenericObject<number>)[];
+			let result: (string | number | GenericObject<number> | number[])[]; 
+			test("Should return the values of an object.", () => {
+				testObject = { a: 1, b: 2, c: { d: 3 } };
+				values = [1, 2, { d: 3 }]; 
+				result = ObjectUtils.values(testObject);
+				expect(result).toEqual(values);
+			});
+			test("Should return an empty array for an empty object.", () => {
+				testObject = {};
+				values = [];
+				result = ObjectUtils.values(testObject);
+				expect(result).toEqual(values);
+			});
+			test("Should return values of an object with nested properties.", () => {
+				testObject = { a: 1, b: { c: 2 } };
+				values = [1, { c: 2 }];
+				result = ObjectUtils.values(testObject);
+				expect(result).toEqual(values);
+			});
 		});
 		describe("entries", () => {
-			test.todo("Should return the entries of an object.");
-			test.todo("Should return an empty array for an empty object.");
-			test.todo("Should return entries of an object with nested properties.");
+			let testObject: GenericObject<number>;
+			let entries: Entry<typeof testObject>[];
+			let result: typeof entries;
+			test("Should return the entries of an object.", () => {
+				testObject = { a: 1, b: 2, c: { d: 3 } };
+				entries = [['a', 1], ['b', 2], ['c', { d: 3 }]];
+				result = ObjectUtils.entries(testObject);
+				expect(result).toEqual(entries);
+			});
+			test("Should return an empty array for an empty object.", () => {
+				testObject = {};
+				entries = [];
+				result = ObjectUtils.entries(testObject);
+				expect(result).toEqual(entries);
+			});
+			test("Should return entries of an object with nested properties.", () => {
+				testObject = { a: 1, b: { c: 2 } };
+				entries = [['a', 1], ['b', { c: 2 }]];
+				result = ObjectUtils.entries(testObject);
+				expect(result).toEqual(entries);
+			});
 		});
 		describe("deepEqual", () => {
-			test.todo("Should check deep equality of two objects.");
-			test.todo("Should return false for objects that are not deeply equal.");
-			test.todo("Should return true for deeply equal nested objects.");
-			test.todo("Should return false for objects with different structures.");
+			let result: boolean;
+			let obj1: GenericObject<number>;
+			let obj2: GenericObject<number>;
+			test("Should check deep equality of two objects.", () => {
+				obj1 = { a: 1, b: { c: 2 } };
+				obj2 = { a: 1, b: { c: 2 } };
+				result = ObjectUtils.deepEqual(obj1, obj2);
+				expect(result).toBeTruthy();
+			});
+			test("Should return false for objects that are not deeply equal.", () => {
+				obj1 = { a: 1, b: { c: 2 } };
+				obj2 = { a: 1, b: { c: 3 } };
+				result = ObjectUtils.deepEqual(obj1, obj2);
+				expect(result).toBeFalsy();
+			});
+			test("Should return true for deeply equal nested objects.", () => {
+				obj1 = { a: { b: 1 }, c: 2 };
+				obj2 = { a: { b: 1 }, c: 2 };
+				result = ObjectUtils.deepEqual(obj1, obj2);
+				expect(result).toBeTruthy();
+			});
+			test("Should return false for objects with different structures.", () => {
+				obj1 = { a: 1, b: 2 };
+				obj2 = { a: 1, b: { c: 2 } };
+				result = ObjectUtils.deepEqual(obj1, obj2);
+				expect(result).toBeFalsy();
+			});
 		});
 		describe("isEqual", () => {
-			test.todo("Should check deep equality of two objects.");
-			test.todo("Should return false for objects that are not deeply equal.");
-			test.todo("Should return true for deeply equal nested objects.");
-			test.todo("Should return false for objects with different structures.");
+			let result: boolean;
+			let obj1: GenericObject<number>;
+			let obj2: GenericObject<number>;
+			test("Should check deep equality of two objects.", () => {
+				obj1 = { a: 1, b: { c: 2 } };
+				obj2 = { a: 1, b: { c: 2 } };
+				result = ObjectUtils.deepEqual(obj1, obj2);
+				expect(result).toBeTruthy();
+			});
+			test("Should return false for objects that are not deeply equal.", () => {
+				obj1 = { a: 1, b: { c: 2 } };
+				obj2 = { a: 1, b: { c: 3 } };
+				result = ObjectUtils.deepEqual(obj1, obj2);
+				expect(result).toBeFalsy();
+			});
+			test("Should return true for deeply equal nested objects.", () => {
+				obj1 = { a: { b: 1 }, c: 2 };
+				obj2 = { a: { b: 1 }, c: 2 };
+				result = ObjectUtils.deepEqual(obj1, obj2);
+				expect(result).toBeTruthy();
+			});
+			test("Should return false for objects with different structures.", () => {
+				obj1 = { a: 1, b: 2 };
+				obj2 = { a: 1, b: { c: 2 } };
+				result = ObjectUtils.deepEqual(obj1, obj2);
+				expect(result).toBeFalsy();
+			});
 		});
 	});
 	describe("Object Transformation", () => {

@@ -1,3 +1,5 @@
+import { Entry } from "./defns";
+
 export class ObjectUtils {
 	// Object Manipulation
     // Method to remove a property from an object
@@ -163,7 +165,7 @@ export class ObjectUtils {
         return Object.values(obj);
     }
 	// Method to get the entries of an object
-    static entries<T extends object>(obj: T): [keyof T, T[keyof T]][] {
+    static entries<T extends object>(obj: T): Entry<T>[] {
         return Object.entries(obj) as [keyof T, T[keyof T]][];
     }
 	// Method to check deep equality of two objects
