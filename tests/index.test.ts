@@ -514,37 +514,165 @@ describe("Object Manipulation Tests", () => {
 	});
 	describe("Object Transformation", () => {
 		describe("mapProperties", () => {
-			test.todo("Should map over an object's properties.");
-			test.todo("Should handle an empty object.");
-			test.todo("Should map properties of an object with nested properties.");
+			let testObject: GenericObject<number>;
+			let mappedObject: GenericObject<number>;
+			let result: GenericObject<number>;
+			test("Should map over an object's properties.", () => {
+				testObject = { a: 1, b: 2, c: { d: 3 } };
+				mappedObject = { a: 2, b: 4, c: { d: 6 } }
+				result = ObjectUtils.mapProperties(testObject, value => {
+					if(typeof value === 'number')
+					   value *= 2;
+				    return value;
+				});
+				expect(result).toEqual(mappedObject);
+			});
+			test("Should handle an empty object.", () => {
+				testObject = {};
+				mappedObject = {};
+				result = ObjectUtils.mapProperties(testObject, value => {
+					if(typeof value === 'number')
+					   value *= 2;
+				    return value;
+				});
+				expect(result).toEqual(mappedObject);
+			});
 		});
 		describe("filterProperties", () => {
-			test.todo("Should filter properties of an object based on a predicate.");
-			test.todo("Should return an empty object if no properties match the predicate.");
-			test.todo("Should handle an empty object.");
+			let testObject: GenericObject<number>;
+			let filteredObject: GenericObject<number>;
+			let result: GenericObject<number>;
+			test("Should filter properties of an object based on a predicate.", () => {
+				testObject = { a: 1, b: 2, c: { d: 3 } };
+				filteredObject = { b: 2 };
+				result = ObjectUtils.filterProperties(testObject, value => value > 1);
+				expect(result).toEqual(filteredObject);
+			});
+			/*
+			 * TODO: should this behavior exist?
+			test("Should filter properties of an object based on a predicate.", () => {
+				testObject = { a: 1, b: 2, c: { d: 3 } };
+				filteredObject = { d: 3 };
+				result = ObjectUtils.filterProperties(testObject, value => value > 2);
+				expect(result).toEqual(filteredObject);
+			});
+		    */
+			test("Should return an empty object if no properties match the predicate.", () => {
+				testObject = { a: 1, b: 1 };
+				filteredObject = {};
+				result = ObjectUtils.filterProperties(testObject, value => value > 2);
+				expect(result).toEqual(filteredObject);
+			});
+			test("Should handle an empty object.", () => {
+				testObject = {};
+				filteredObject = {};
+				result = ObjectUtils.filterProperties(testObject, value => value > 1);
+				expect(result).toEqual(filteredObject);
+			});
 		});
 		describe("transform", () => {
-			test.todo("Should transform an object based on a callback function.");
-			test.todo("Should handle an empty object.");
-			test.todo("Should transform properties of an object with nested properties.");
+			let testObject: GenericObject<number>;
+			let transformedObject: GenericObject<number>;
+			let result: GenericObject<number>;
+			test("Should transform an object based on a callback function.", () => {
+				testObject = { a: 1, b: 2, c: { d: 3 } };
+				transformedObject = { a: 2, b: 3, c: { d: 4 } };
+				result = ObjectUtils.transform(testObject, value => value as number + 1);
+				expect(result).toEqual(transformedObject);
+			});
+			test("Should handle an empty object.", () => {
+				testObject = {};
+				transformedObject = {};
+				result = ObjectUtils.transform(testObject, value => value as number + 1);
+				expect(result).toEqual(transformedObject);
+			});
 		});
 		describe("flatten", () => {
-			test.todo("Should flatten a nested object into a single-level object.");
-			test.todo("Should handle an empty object.");
-			test.todo("Should flatten an object with multiple nested levels.");
-			test.todo("Should flatten an object with arrays.");
+			let nestedObject: GenericObject<number>;
+			let flattenedObject: GenericObject<number>;
+			let result: GenericObject<number>;
+			test("Should flatten a nested object into a single-level object.", () => {
+				nestedObject = { a: 1, b: { c: 2, d: { e: 3 } } };
+				flattenedObject = { a: 1, 'b.c': 2, 'b.d.e': 3 };
+				result = ObjectUtils.flatten(nestedObject);
+				expect(result).toEqual(flattenedObject);
+			});
+			test("Should handle an empty object.", () => {
+				nestedObject = {};
+				flattenedObject = {};
+				result = ObjectUtils.flatten(nestedObject);
+				expect(result).toEqual(flattenedObject);
+			});
+			test("Should flatten an object with multiple nested levels.", () => {
+				nestedObject = { a: { b: { c: 1 } }, d: 2 };
+				flattenedObject = { 'a.b.c': 1, d: 2 };
+				result = ObjectUtils.flatten(nestedObject);
+				expect(result).toEqual(flattenedObject);
+			});
+			test("Should flatten an object with arrays.", () => {
+				nestedObject = { a: [1, 2], b: { c: 3 } };
+				flattenedObject = { 'a': [1, 2], 'b.c': 3 };
+				result = ObjectUtils.flatten(nestedObject);
+				expect(result).toEqual(flattenedObject);
+			});
 		});
 		describe("unflatten", () => {
-			test.todo("Should convert a flattened object back into a nested object.");
-			test.todo("Should handle an empty object.");
-			test.todo("Should convert a flattened object with multiple levels back to nested structure.");
-			test.todo("Should handle flattened objects with arrays.");
+			let flattenedObject: GenericObject<number>;
+			let nestedObject: GenericObject<number>;
+			let result: GenericObject<number>;
+			test("Should convert a flattened object back into a nested object.", () => {
+				flattenedObject = { 'a': 1, 'b.c': 2, 'b.d.e': 3 };
+				nestedObject = { a: 1, b: { c: 2, d: { e: 3 } } };
+				result = ObjectUtils.unflatten(flattenedObject);
+				expect(result).toEqual(nestedObject);
+			});
+			test("Should handle an empty object.", () => {
+				flattenedObject = {};
+				nestedObject = {};
+				result = ObjectUtils.unflatten(flattenedObject);
+				expect(result).toEqual(nestedObject);
+			});
+			test("Should convert a flattened object with multiple levels back to nested structure.", () => {
+				flattenedObject = { 'a.b.c': 1, 'd': 2 };
+				nestedObject = { a: { b: { c: 1 } }, d: 2 };
+				result = ObjectUtils.unflatten(flattenedObject);
+				expect(result).toEqual(nestedObject);
+			});
+			test("Should handle flattened objects with arrays.", () => {
+				flattenedObject = { 'a': [ 1, 2] };
+				nestedObject = { a: [1, 2] };
+				result = ObjectUtils.unflatten(flattenedObject);
+				expect(result).toEqual(nestedObject);
+			});
 		});
 		describe("mapKeys", () => {
-			test.todo("Should map the keys of an object to new keys based on a callback function.");
-			test.todo("Should handle an empty object.");
-			test.todo("Should map keys of an object with nested properties.");
-			test.todo("Should handle keys that are not strings.");
+			let testObject: GenericObject<number>;
+			let mappedKeysObject: GenericObject<number>;
+			let result: GenericObject<number>;
+			test("Should map the keys of an object to new keys based on a callback function.", () => {
+				testObject = { a: 1, b: 2, c: { d: 3 } };
+				mappedKeysObject = { A: 1, B: 2, C: { d: 3 } };
+				result = ObjectUtils.mapKeys(testObject, key => (key as string).toUpperCase());
+				expect(result).toEqual(mappedKeysObject);
+			});
+			test("Should handle an empty object.", () => {
+				testObject = {};
+				mappedKeysObject = {};
+				result = ObjectUtils.mapKeys({}, key => (key as string).toUpperCase());
+				expect(result).toEqual(mappedKeysObject);
+			});
+			test("Should map keys of an object with nested properties.", () => {
+				testObject = { a: 1, b: { c: 2 } };
+				mappedKeysObject = { a_new: 1, b_new: { c: 2 } }
+				result = ObjectUtils.mapKeys(testObject, (key) => key + '_new');
+				expect(result).toEqual(mappedKeysObject);
+			});
+			test("Should handle keys that are not strings.", () => {
+				testObject = { 1: 'one', 2: 'two' };
+				mappedKeysObject = { key_1: 'one', key_2: 'two' };
+				result = ObjectUtils.mapKeys(testObject, (key) => `key_${key}`);
+				expect(result).toEqual(mappedKeysObject);
+			});
 		});
 	});
 });

@@ -193,25 +193,75 @@ export class ObjectUtils {
     // Method to map over an object's properties
     static mapProperties<T extends object, U>(obj: T, callback: (value: T[keyof T], key: keyof T) => U): { [K in keyof T]: U } {
         const result: Partial<{ [K in keyof T]: U }> = {};
+
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                // result[key] = callback(obj[key], key);
+				const value = obj[key];
+				if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+					// Recursively map properties of the nested object
+					result[key] = ObjectUtils.mapProperties(value as unknown as T, callback) as unknown as U;
+				} else {
+					result[key] = callback(value, key);
+				}
+            }
+        }
+
         return result as { [K in keyof T]: U };
     }
     // Method to filter properties of an object based on a predicate
     static filterProperties<T extends object>(obj: T, predicate: (value: T[keyof T], key: keyof T) => boolean): Partial<T> {
         const result: Partial<T> = {};
+		// Method to filter properties of an object based on a predicate
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key) && predicate(obj[key], key)) {
+                result[key] = obj[key];
+            }
+        }
         return result;
     }
     // Method to transform an object based on a callback function
     static transform<T extends object, U>(obj: T, callback: (value: T[keyof T], key: keyof T) => U): { [K in keyof T]: U } {
         const result: Partial<{ [K in keyof T]: U }> = {};
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+				const value = obj[key];
+				if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+					// Recursively map properties of the nested object
+					result[key] = ObjectUtils.mapProperties(value as unknown as T, callback) as unknown as U;
+				} else {
+					result[key] = callback(value, key);
+				}
+            }
+        }
         return result as { [K in keyof T]: U };
     }
     // Method to flatten a nested object into a single-level object with dot-separated keys
     static flatten<T extends object>(obj: T, prefix = '', result: Partial<Record<string, any>> = {}): Record<string, any> {
+		for (const key in obj) {
+            const propName = prefix ? `${prefix}.${key}` : key;
+            if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+                this.flatten(obj[key] as unknown as T, propName, result);
+            } else {
+                result[propName] = obj[key];
+            }
+        }
         return result;
     }
     // Method to convert a flattened object back into a nested object
     static unflatten<T extends object>(obj: Record<string, any>): T {
         const result: any = {};
+		for (const key in obj) {
+            const keys = key.split('.');
+            keys.reduce((acc, part, index) => {
+                if (index === keys.length - 1) {
+                    acc[part] = obj[key];
+                } else {
+                    acc[part] = acc[part] || {};
+                }
+                return acc[part];
+            }, result);
+        }
         return result;
     }
     // Method to map the keys of an object to new keys based on a callback function
@@ -219,7 +269,13 @@ export class ObjectUtils {
         obj: T,
         callback: (key: keyof T) => K
     ): { [key in K]: T[keyof T] } {
-        const result: Partial<{ [key in K]: T[keyof T] }> = {};
+		const result: Partial<{ [key in K]: T[keyof T] }> = {};
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const newKey = callback(key as keyof T);
+                result[newKey] = obj[key];
+            }
+        }
         return result as { [key in K]: T[keyof T] };
     }
 }
